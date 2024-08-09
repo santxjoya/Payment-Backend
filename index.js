@@ -1,6 +1,9 @@
 const express = require('express');
 const sequelize = require('./config/database');
-const userRouter = require('./routes/users');
+const personRouter = require('./routes/persons');
+const areaRouter = require('./routes/areas');
+const rolRouter = require('./routes/roles');
+
 
 const app = express();
 app.use(express.json());
@@ -16,10 +19,12 @@ app.get('/', (req, res) => {
     res.json({ message: '¡Hola desde la API!' });
 });
 
-// Usa las rutas de usuarios
-app.use('/api', userRouter);
+// Usa las rutas
+app.use('/api', personRouter);
+app.use('/api', areaRouter);
+app.use('/api', rolRouter);
 
-const port = process.env.PORT || 800;
+const port = process.env.PORT || 8080;
 
 sequelize.sync().then(() => {
     console.log('Base de datos sincronizada');
