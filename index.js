@@ -3,6 +3,7 @@ const sequelize = require('./config/database');
 const personRouter = require('./routes/persons');
 const areaRouter = require('./routes/areas');
 const rolRouter = require('./routes/roles');
+const AuthRouter = require('./routes/Auth');
 
 
 const app = express();
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
 app.use('/api', personRouter);
 app.use('/api', areaRouter);
 app.use('/api', rolRouter);
+app.use('/api', AuthRouter);
 
 const port = process.env.PORT || 8080;
 
