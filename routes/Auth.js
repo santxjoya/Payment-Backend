@@ -10,8 +10,8 @@ const {
 const router = express.Router();
 
 router.post('/register', postRegister);
-router.get('/register',  getRegister);
+// router.get('/register',  getRegister);
 
 router.post('/login', postLogin);
-router.get('/login', getLogin);
+// router.get('/login', getLogin);
 module.exports = router;
