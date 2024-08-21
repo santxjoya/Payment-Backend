@@ -1,5 +1,6 @@
 const express = require('express');
 const sequelize = require('./config/database');
+const session = require('express-session');
 const personRouter = require('./routes/persons');
 const areaRouter = require('./routes/areas');
 const rolRouter = require('./routes/roles');
@@ -11,18 +12,13 @@ app.use(express.json());
 
 // Configura CORS
 app.use(cors({
-    origin: 'http://127.0.0.1:8080',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true // Permite el envío de credenciales
+    origin: 'http://localhost:8080', // Especifica el origen permitido (el frontend)
+    credentials: true, // Permite el envío de credenciales (cookies, auth headers, etc.)
+  }));
+  app.options('*', cors({
+    origin: 'http://localhost:8080',
+    credentials: true,
 }));
-
-// Middleware de registro de solicitudes
-app.use((req, res, next) => {
-    console.log(`${req.method} ${req.url}`);
-    next();
-});
-
 // Usa las rutas
 app.use('/api', personRouter);
 app.use('/api', areaRouter);
