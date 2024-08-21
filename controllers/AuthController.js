@@ -1,6 +1,5 @@
 const Person = require('../models/Person');
 const bcrypt = require('bcryptjs');
-
 exports.getRegister = (req, res) => {
   res.render('register');
 };
@@ -28,8 +27,10 @@ exports.postRegister = async (req, res) => {
 exports.getLogin = (req, res) => {
   res.render('login');
 };
+
 exports.postLogin = async (req, res) => {
   const { per_mail, per_password } = req.body;
+  
   try {
     const person = await Person.findOne({ where: { per_mail } });
     if (person && (await bcrypt.compare(per_password, person.per_password))) {
