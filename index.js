@@ -5,6 +5,7 @@ const areaRouter = require('./routes/areas');
 const rolRouter = require('./routes/roles');
 const AuthRouter = require('./routes/Auth');
 const SuppliersRouter = require('./routes/suppliers');
+const CurrencieRouter = require ('./routes/currencies');
 const cors = require('cors');
 
 const app = express();
@@ -30,6 +31,7 @@ app.use('/api', areaRouter);
 app.use('/api', rolRouter);
 app.use('/api', AuthRouter);
 app.use('/api', SuppliersRouter);
+app.use('/api', CurrencieRouter);
 
 const port = process.env.PORT || 8000;
 
