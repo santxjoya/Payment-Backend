@@ -41,4 +41,5 @@ const Person = sequelize.define('Person', {
     timestamps: false   // Desactiva los timestamps si la tabla no tiene createdAt y updatedAt
 });
 
+
 module.exports = Person;
