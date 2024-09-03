@@ -30,8 +30,8 @@ exports.postRegister = async (req, res) => {
       per_lastname,
       per_mail,
       per_password: ProteccionPassword,
-      per_status: 1, // Asignar estado activo por defecto
-      rol_id: 1 // Asignar rol de Usuario por defecto
+      per_status: 1,
+      rol_id: 1
     });
     res.status(200).send('Se registró correctamente');
   } catch (error) {
@@ -46,13 +46,10 @@ exports.getLogin = (req, res) => {
 
 exports.postLogin = async (req, res) => {
   const { per_mail, per_password } = req.body;
-  
   try {
     const person = await Person.findOne({ where: { per_mail } });
     if (person && (await bcrypt.compare(per_password, person.per_password))) {
-
       const token = asignarToken(person);
-      
       res.status(201).json({ message: 'Login exitoso', token });
     } else {
       res.status(401).send('Credenciales incorrectas');
@@ -61,4 +58,21 @@ exports.postLogin = async (req, res) => {
     console.error(error);
     res.status(500).send('Error al autenticar');
   }
+};
+
+exports.authenticateToken= async (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+      return res.sendStatus(401);
+  }
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+      if (err) {
+          return res.sendStatus(403);
+      }
+      req.user = user;
+      next();
+  });
 };

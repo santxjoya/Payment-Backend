@@ -1,6 +1,5 @@
 const express = require('express');
 const sequelize = require('./config/database');
-const session = require('express-session');
 const personRouter = require('./routes/persons');
 const areaRouter = require('./routes/areas');
 const rolRouter = require('./routes/roles');
@@ -9,6 +8,7 @@ const SuppliersRouter = require('./routes/suppliers');
 const CurrencieRouter = require ('./routes/currencies');
 const TypeSolicitationsRouter = require ('./routes/type_solicitations');
 const SolicitationsRouter = require ('./routes/solicitations');
+const { authenticateToken } = require('./controllers/AuthController');
 const cors = require('cors');
 
 const app = express();
@@ -24,14 +24,15 @@ app.use(cors({
     credentials: true,
 }));
 // Usa las rutas
-app.use('/api', personRouter);
-app.use('/api', areaRouter);
-app.use('/api', rolRouter);
+app.use('/api',authenticateToken,personRouter);
+app.use('/api',authenticateToken,areaRouter);
+app.use('/api',authenticateToken,rolRouter);
+app.use('/api',authenticateToken,SuppliersRouter);
+app.use('/api',authenticateToken,CurrencieRouter);
+app.use('/api',authenticateToken,TypeSolicitationsRouter);
+app.use('/api',authenticateToken,SolicitationsRouter);
+
 app.use('/api', AuthRouter);
-app.use('/api', SuppliersRouter);
-app.use('/api', CurrencieRouter);
-app.use('/api', TypeSolicitationsRouter);
-app.use('/api', SolicitationsRouter);
 
 const port = process.env.PORT || 8000;
 
