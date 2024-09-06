@@ -4,9 +4,7 @@ const { body, validationResult } = require('express-validator');
 
 const createArea = [
     // Validaciones
-    body('are_name')
-        .trim()
-        .notEmpty().withMessage('El nombre es requerido.')
+    body('are_name').trim().notEmpty().withMessage('El nombre es requerido.')
         .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
         .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
     async (req, res) => {
@@ -48,9 +46,7 @@ const getAreaById = async (req, res) => {
 
 const updateArea = [
     // Validaciones para `are_name`
-    body('are_name')
-        .trim()
-        .optional()
+    body('are_name').trim().optional()
         .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
         .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
     async (req, res) => {

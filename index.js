@@ -24,6 +24,8 @@ app.use(cors({
     credentials: true,
 }));
 // Usa las rutas
+app.use('/api', AuthRouter);
+
 app.use('/api',authenticateToken,personRouter);
 app.use('/api',authenticateToken,areaRouter);
 app.use('/api',authenticateToken,rolRouter);
@@ -31,8 +33,6 @@ app.use('/api',authenticateToken,SuppliersRouter);
 app.use('/api',authenticateToken,CurrencieRouter);
 app.use('/api',authenticateToken,TypeSolicitationsRouter);
 app.use('/api',authenticateToken,SolicitationsRouter);
-
-app.use('/api', AuthRouter);
 
 const port = process.env.PORT || 8000;
 

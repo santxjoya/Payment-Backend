@@ -1,13 +1,25 @@
 const Rol = require('../models/Rol');
+const { body, validationResult } = require('express-validator');
 
-const createRol = async (req, res) => {
-    try {
-        const rol = await Rol.create(req.body);
-        res.status(201).json(rol);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
+const createRol = [
+    body('rol_name').trim().notEmpty().withMessage('El nombre es requerido.')
+        .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
+        .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
+    body('are_id').trim().notEmpty().withMessage('El area es requerida.'),
+        async (req, res) => {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const allErrors = errors.array().map(error => error.msg);
+                return res.status(400).json({ errors: allErrors });
+            }
+            try {
+                const rol = await Rol.create(req.body);
+                res.status(201).json(rol);
+            } catch (error) {
+                res.status(400).json({ error: error.message });
+        }
     }
-};
+];
 
 const getAllRoles = async (req, res) => {
     try {
@@ -30,18 +42,28 @@ const getRolById = async (req, res) => {
     }
 };
 
-const updateRol = async (req, res) => {
-    try {
-        const rol = await Rol.findByPk(req.params.id);
-        if (!rol) {
-            return res.status(404).json({ message: 'Rol no encontrado' });
+const updateRol = [
+    body('rol_name').trim().optional()
+        .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
+        .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
+    body('are_id').trim().optional(),
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
         }
-        await rol.update(req.body);
-        res.status(200).json(rol);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
+        try {
+            const rol = await Rol.findByPk(req.params.id);
+            if (!rol) {
+                return res.status(404).json({ message: 'Rol no encontrado' });
+            }
+            await rol.update(req.body);
+            res.status(200).json(rol);
+        } catch (error) {
+            res.status(400).json({ error: error.message });
+        }
     }
-};
+];
 
 const deleteRol = async (req, res) => {
     try {

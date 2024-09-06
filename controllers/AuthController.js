@@ -1,8 +1,7 @@
 const Person = require('../models/Person');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
-const SECRET_KEY = 'Clave';
+const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET || 'Clave'; // Usa la clave de entorno o un valor por defecto
 
 // Función para generar el token JWT
 function asignarToken(person) {
@@ -17,14 +16,10 @@ function asignarToken(person) {
   );
 }
 
-exports.getRegister = (req, res) => {
-  res.render('register');
-};
-
 exports.postRegister = async (req, res) => {
   const { per_name, per_lastname, per_mail, per_password } = req.body;
-  const ProteccionPassword = await bcrypt.hash(per_password, 10);
   try {
+    const ProteccionPassword = await bcrypt.hash(per_password, 10);
     await Person.create({
       per_name,
       per_lastname,
@@ -60,19 +55,19 @@ exports.postLogin = async (req, res) => {
   }
 };
 
-exports.authenticateToken= async (req, res, next) => {
+exports.authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-      return res.sendStatus(401);
+    return res.sendStatus(401);
   }
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-      if (err) {
-          return res.sendStatus(403);
-      }
-      req.user = user;
-      next();
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+    if (err) {
+      return res.sendStatus(403);
+    }
+    req.user = user;
+    next();
   });
 };
