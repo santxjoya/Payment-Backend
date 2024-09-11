@@ -1,13 +1,18 @@
 const Suppliers = require('../models/Suppliers');
+const { body, validationResult } = require('express-validator');
 
-const createSupplier = async (req, res) => {
+const createSupplier = [
+    body('sup_name').trim().notEmpty().withMessage('El nombre es requerido.')
+    .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
+    .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
+    async (req, res) => {
     try {
         const supplier = await Suppliers.create(req.body);
         res.status(201).json(supplier);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
-};
+}];
 
 const getSuppliers = async (req, res) => {
     try {
@@ -30,7 +35,12 @@ const getSupplierById = async (req, res) => {
     }
 };
 
-const updateSupplier = async (req, res) => {
+const updateSupplier = [
+    body('sup_name').trim().optional()
+    .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
+    .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
+
+    async (req, res) => {
     try {
         const supplier = await Suppliers.findByPk(req.params.id);
         if (!supplier) {
@@ -41,7 +51,7 @@ const updateSupplier = async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
-};
+}];
 
 const deleteSupplier = async (req, res) => {
     try {

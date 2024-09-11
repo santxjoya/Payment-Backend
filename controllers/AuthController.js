@@ -1,7 +1,7 @@
 const Person = require('../models/Person');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET || 'Clave'; // Usa la clave de entorno o un valor por defecto
+const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET || 'Clave'; // Usa la clave de entorno o un valor por defecto para token
 
 // Función para generar el token JWT
 function asignarToken(person) {
