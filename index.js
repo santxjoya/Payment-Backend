@@ -8,8 +8,11 @@ const SuppliersRouter = require('./routes/suppliers');
 const CurrencieRouter = require ('./routes/currencies');
 const TypeSolicitationsRouter = require ('./routes/type_solicitations');
 const SolicitationsRouter = require ('./routes/solicitations');
+const AttachmentRouter = require('./routes/attachment');
 const { authenticateToken } = require('./controllers/AuthController');
 const cors = require('cors');
+const path = require('path');
+
 
 const app = express();
 app.use(express.json());
@@ -23,6 +26,8 @@ app.use(cors({
     origin: 'http://localhost:8080',
     credentials: true,
 }));
+//Configuracion Path
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Usa las rutas
 app.use('/api', AuthRouter);
 
@@ -33,6 +38,9 @@ app.use('/api',authenticateToken,SuppliersRouter);
 app.use('/api',authenticateToken,CurrencieRouter);
 app.use('/api',authenticateToken,TypeSolicitationsRouter);
 app.use('/api',authenticateToken,SolicitationsRouter);
+app.use('/api',authenticateToken,AttachmentRouter);
+
+
 
 const port = process.env.PORT || 8000;
 
