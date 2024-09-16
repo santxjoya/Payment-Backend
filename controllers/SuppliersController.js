@@ -6,6 +6,11 @@ const createSupplier = [
     .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
     .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
     async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const allErrors = errors.array().map(error => error.msg);
+            return res.status(400).json({ errors: allErrors });
+        }
     try {
         const supplier = await Suppliers.create(req.body);
         res.status(201).json(supplier);
@@ -39,8 +44,12 @@ const updateSupplier = [
     body('sup_name').trim().optional()
     .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
     .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
-
     async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const allErrors = errors.array().map(error => error.msg);
+            return res.status(400).json({ errors: allErrors });
+        }
     try {
         const supplier = await Suppliers.findByPk(req.params.id);
         if (!supplier) {

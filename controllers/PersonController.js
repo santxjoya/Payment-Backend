@@ -14,6 +14,11 @@ const createPerson = [
     body('rol_id').trim().notEmpty().withMessage('El rol es requerida.'),
 
 async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const allErrors = errors.array().map(error => error.msg);
+        return res.status(400).json({ errors: allErrors });
+    }
     try {
         const person = await Person.create(req.body);
         res.status(201).json(person);
@@ -58,6 +63,11 @@ const updatePerson = [
     body('rol_id').trim().optional()
         .notEmpty().withMessage('El rol es requerido.'),
     async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const allErrors = errors.array().map(error => error.msg);
+            return res.status(400).json({ errors: allErrors });
+        }
     try {
         const person = await Person.findByPk(req.params.id);
         if (!person) {

@@ -1,7 +1,7 @@
 const Solicitation = require('../models/Solicitation');
 const { body, validationResult } = require('express-validator');
 
-const createSolicitation = [ 
+const createSolicitation = [
     body('sol_status').trim().notEmpty()
         .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
         .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
@@ -19,8 +19,12 @@ const createSolicitation = [
         .notEmpty().withMessage('Tipo de monedas es requerido.'),
     body('typ_sol_id').trim().notEmpty()
         .notEmpty().withMessage('El tipo de solicitud es requerido.'),
-
     async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const allErrors = errors.array().map(error => error.msg);
+            return res.status(400).json({ errors: allErrors });
+        }
     try {
         const solicitation = await Solicitation.create(req.body);
         res.status(201).json(solicitation);
@@ -68,8 +72,12 @@ const updateSolicitation = [
         .notEmpty().withMessage('Tipo de monedas es requerido.'),
     body('typ_sol_id').trim().optional()
         .notEmpty().withMessage('El tipo de solicitud es requerido.'),
-
     async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const allErrors = errors.array().map(error => error.msg);
+            return res.status(400).json({ errors: allErrors });
+        }
     try {
         const solicitation = await Solicitation.findByPk(req.params.id);
         if (!solicitation) {
