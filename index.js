@@ -34,7 +34,7 @@ app.use('/api',authenticateToken,CurrencieRouter);
 app.use('/api',authenticateToken,TypeSolicitationsRouter);
 app.use('/api',authenticateToken,SolicitationsRouter);
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT;
 
 sequelize.sync().then(() => {
     console.log('Base de datos sincronizada');

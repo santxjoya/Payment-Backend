@@ -1,3 +1,4 @@
+//Conexión a la base de datos con variables de entorno
 require('dotenv').config();
 const { Sequelize } = require('sequelize');
 

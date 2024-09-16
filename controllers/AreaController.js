@@ -1,7 +1,6 @@
 const Area = require('../models/Area');
 const { body, validationResult } = require('express-validator');
 
-
 const createArea = [
     // Validaciones
     body('are_name').trim().notEmpty().withMessage('El nombre es requerido.')
