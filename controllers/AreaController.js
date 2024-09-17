@@ -1,7 +1,6 @@
 const Area = require('../models/Area');
 const { body, validationResult } = require('express-validator');
 
-
 const createArea = [
     // Validaciones
     body('are_name').trim().notEmpty().withMessage('El nombre es requerido.')
@@ -10,8 +9,8 @@ const createArea = [
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            const firstError = errors.array()[0].msg;
-            return res.status(400).json({ error: firstError });
+            const allErrors = errors.array().map(error => error.msg);
+            return res.status(400).json({ errors: allErrors });
         }
         //Si la validaciones están bien Crea la nueva Area
         try {
@@ -52,7 +51,8 @@ const updateArea = [
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            const allErrors = errors.array().map(error => error.msg);
+            return res.status(400).json({ errors: allErrors });
         }
         try {
             const area = await Area.findByPk(req.params.id);

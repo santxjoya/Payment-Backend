@@ -1,13 +1,23 @@
 const Currencies = require ('../models/Currencies');
+const { body, validationResult } = require('express-validator');
 
-const createCurrencies = async (req ,res ) =>{
+const createCurrencies =[
+    body('cur_name').trim().notEmpty().withMessage('El nombre es requerido.')
+        .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
+        .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
+    async (req ,res ) =>{
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const allErrors = errors.array().map(error => error.msg);
+            return res.status(400).json({ errors: allErrors });
+        }
     try {
         const currency = await Currencies.create(req.body);
         res.status(201).json(currency);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
-};
+}];
 const getCurrencies = async (req ,res )   =>{
     try {
         const currencies = await Currencies.findAll();
@@ -27,7 +37,16 @@ const getCurrenciesById = async (req ,res )   =>{
         res.status(500).json({ error: error.message });
     }
 }
-const  updateCurrencies = async (req , res )  =>  {
+const  updateCurrencies =[
+    body('cur_name').trim().optional()
+    .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
+    .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
+    async (req , res )  =>  {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const allErrors = errors.array().map(error => error.msg);
+            return res.status(400).json({ errors: allErrors });
+        }
     try {
         const currency = await Currencies.findByPk(req.params.id);
         if (!currency) {
@@ -38,7 +57,7 @@ const  updateCurrencies = async (req , res )  =>  {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
-}
+}];
 const deleteCurrencies = async (req ,res )   =>{
     try {
         const currency = await Currencies.findByPk(req.params.id);
