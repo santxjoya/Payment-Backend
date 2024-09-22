@@ -1,8 +1,6 @@
 const Person = require('../models/Person');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto'); 
-const emailjs = require('emailjs-com');
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET || 'Clave'; // Usa la clave de entorno o un valor por defecto para token
 
 // Función para generar el token JWT
@@ -17,17 +15,14 @@ function asignarToken(person) {
     { expiresIn: '1h' }
   );
 }
-//Validar Correo
 function validarEmail(email) {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailPattern.test(email);
 }
-//Validacion Contraseña
 function validarPassword(password) {
   const passwordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,15}$/;
   return passwordPattern.test(password);
 }
-
 exports.postRegister = async (req, res) => {
   const { per_name, per_lastname, per_mail, per_password } = req.body;
 
@@ -77,6 +72,7 @@ exports.postRegister = async (req, res) => {
   }
 };
 
+
 exports.getLogin = (req, res) => {
   res.render('login');
 };
@@ -113,6 +109,7 @@ exports.postLogin = async (req, res) => {
     res.status(500).send('Error al autenticar');
   }
 };
+
 exports.authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -129,4 +126,3 @@ exports.authenticateToken = (req, res, next) => {
     next();
   });
 };
-
