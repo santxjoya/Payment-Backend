@@ -29,7 +29,7 @@ app.use(cors({
 //Configuracion Path
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Usa las rutas
-app.use('/api',authenticateToken,AuthRouter);
+app.use('/api',AuthRouter);
 app.use('/api',authenticateToken,personRouter);
 app.use('/api',authenticateToken,areaRouter);
 app.use('/api',authenticateToken,rolRouter);

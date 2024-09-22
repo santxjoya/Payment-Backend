@@ -1,5 +1,7 @@
 const Person = require('../models/Person');
 const { body, validationResult } = require('express-validator');
+const Rol = require('../models/Rol');
+
 
 const createPerson = [
     body('per_name').trim().notEmpty().withMessage('El nombre es requerido.')
@@ -23,13 +25,20 @@ async (req, res) => {
         const person = await Person.create(req.body);
         res.status(201).json(person);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ error: error.message }); 
     }
 }];
 
 const getAllPersons = async (req, res) => {
     try {
-        const persons = await Person.findAll();
+        const persons = await Person.findAll({
+            include: [
+                {
+                    model: Rol, 
+                    attributes: ['rol_id', 'rol_name']
+                } 
+            ] 
+        });
         res.status(200).json(persons);
     } catch (error) {
         res.status(500).json({ error: error.message });

@@ -2,6 +2,8 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const Person = require('./Person');
 const Suppliers = require('./Suppliers');
+const Type_Solicitation = require('./Type_solicitation');
+
 
 const Solicitation = sequelize.define('Solicitation', {
     sol_id: {
@@ -62,5 +64,7 @@ const Solicitation = sequelize.define('Solicitation', {
 
 Solicitation.belongsTo(Person, { foreignKey: 'per_id' });
 Solicitation.belongsTo(Suppliers, { foreignKey: 'sup_id' });
+Solicitation.belongsTo(Type_Solicitation, { foreignKey: 'typ_sol_id' });
+
 
 module.exports = Solicitation;
