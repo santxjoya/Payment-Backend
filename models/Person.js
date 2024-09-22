@@ -36,6 +36,7 @@ const Person = sequelize.define('Person', {
             key: 'rol_id'
         }
     },
+    
 }, {
     tableName: 'persons', // Especifica el nombre de la tabla si no sigue la convención de pluralización
     timestamps: false   // Desactiva los timestamps si la tabla no tiene createdAt y updatedAt

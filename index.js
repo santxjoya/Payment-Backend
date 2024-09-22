@@ -19,11 +19,11 @@ app.use(express.json());
 
 // Configura CORS
 app.use(cors({
-    origin: '*', // Especifica el origen permitido (el frontend)
+    origin: 'http://localhost:4200', // Especifica el origen permitido (el frontend)
     credentials: true, // Permite el envío de credenciales (cookies, auth headers, etc.)
   }));
-  app.options('*', cors({
-    origin: '*',
+  app.options('http://localhost:4200', cors({
+    origin: 'http://localhost:4200',
     credentials: true,
 }));
 //Configuracion Path
