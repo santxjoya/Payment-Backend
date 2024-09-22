@@ -1,5 +1,8 @@
 const Solicitation = require('../models/Solicitation');
+const Person = require('../models/Person');
+const Suppliers = require('../models/Suppliers');
 const { body, validationResult } = require('express-validator');
+
 
 const createSolicitation = [
     body('sol_cost')
@@ -42,7 +45,18 @@ const createSolicitation = [
 
 const getAllSolicitations = async (req, res) => {
     try {
-        const solicitations = await Solicitation.findAll();
+        const solicitations = await Solicitation.findAll({
+            include: [
+                {
+                    model: Person, // Relación con Person (Personas)
+                    attributes: ['per_id', 'per_name']
+                },
+                {
+                    model: Suppliers, // Relación con Supplier (Proveedores)
+                    attributes: ['sup_id', 'sup_name']
+                }
+            ] 
+        });
         res.status(200).json(solicitations);
     } catch (error) {
         res.status(500).json({ error: error.message });

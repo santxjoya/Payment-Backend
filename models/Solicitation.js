@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const Person = require('./Person');
+const Suppliers = require('./Suppliers');
 
 const Solicitation = sequelize.define('Solicitation', {
     sol_id: {
@@ -19,7 +21,7 @@ const Solicitation = sequelize.define('Solicitation', {
     sol_description: {
         type: DataTypes.STRING(255),
         allowNull: false
-    },
+    }, 
     per_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -51,10 +53,14 @@ const Solicitation = sequelize.define('Solicitation', {
             model: 'Type_solicitation',
             key: 'typ_sol_id'
         }
-    }
+    },
+
 }, {
     tableName: 'solicitations', // Especifica el nombre de la tabla si no sigue la convención de pluralización
     timestamps: false   // Desactiva los timestamps si la tabla no tiene createdAt y updatedAt
 });
+
+Solicitation.belongsTo(Person, { foreignKey: 'per_id' });
+Solicitation.belongsTo(Suppliers, { foreignKey: 'sup_id' });
 
 module.exports = Solicitation;
