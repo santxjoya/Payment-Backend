@@ -37,7 +37,7 @@ app.use('/api',authenticateToken,SuppliersRouter);
 app.use('/api',authenticateToken,CurrencieRouter);
 app.use('/api',authenticateToken,TypeSolicitationsRouter);
 app.use('/api',authenticateToken,SolicitationsRouter);
-app.use('/api',authenticateToken,AttachmentRouter);
+app.use('/api',authenticateToken,AttachmentRouter);  //authenticateToken
 
 
 

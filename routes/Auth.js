@@ -5,7 +5,12 @@ const {
     postRegister,
     getRegister,
     postLogin,
-    getLogin
+    getLogin,
+    postForgotPassword,
+    postResetPassword,
+    postVerifyCode,
+ 
+    
 
     
 } = require('../controllers/AuthController');
@@ -16,5 +21,7 @@ router.post('/register', postRegister);
 
 router.post('/login', postLogin);
 // router.get('/login', getLogin);
-
+router.post('/Forgot-Password', postForgotPassword);
+router.post('/verify-code', postVerifyCode);
+router.post('/reset-password', postResetPassword);
 module.exports = router;
