@@ -30,14 +30,14 @@ app.use(cors({
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Usa las rutas
 app.use('/api',AuthRouter);
-app.use('/api',personRouter);
-app.use('/api',areaRouter);
-app.use('/api',rolRouter);
-app.use('/api',SuppliersRouter);
-app.use('/api',CurrencieRouter);
-app.use('/api',TypeSolicitationsRouter);
-app.use('/api',SolicitationsRouter);
-app.use('/api',AttachmentRouter);  //authenticateToken
+app.use('/api',authenticateToken,personRouter);
+app.use('/api',authenticateToken,areaRouter);
+app.use('/api',authenticateToken,rolRouter);
+app.use('/api',authenticateToken,SuppliersRouter);
+app.use('/api',authenticateToken,CurrencieRouter);
+app.use('/api',authenticateToken,TypeSolicitationsRouter);
+app.use('/api',authenticateToken,SolicitationsRouter);
+app.use('/api',authenticateToken,AttachmentRouter);  //authenticateToken
 
 
 
