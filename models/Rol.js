@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const Area = require('./Area');
 
 const Rol = sequelize.define('Rol', {
     rol_id: {
@@ -24,5 +25,7 @@ const Rol = sequelize.define('Rol', {
     tableName: 'roles', // Especifica el nombre de la tabla si no sigue la convención de pluralización
     timestamps: false   // Desactiva los timestamps si la tabla no tiene createdAt y updatedAt
 });
+
+Rol.belongsTo(Area, { foreignKey: 'are_id' });
 
 module.exports = Rol;

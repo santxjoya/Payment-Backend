@@ -2,6 +2,8 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const Person = require('./Person');
 const Suppliers = require('./Suppliers');
+const Type_Solicitation = require('./Type_solicitation');
+const Currencies = require('./Currencies');
 
 const Solicitation = sequelize.define('Solicitation', {
     sol_id: {
@@ -26,7 +28,7 @@ const Solicitation = sequelize.define('Solicitation', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Person',
+            model: Person,  // Usar el modelo importado
             key: 'per_id'
         }
     },
@@ -34,7 +36,7 @@ const Solicitation = sequelize.define('Solicitation', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Suppliers',
+            model: Suppliers,  // Usar el modelo importado
             key: 'sup_id'
         }
     },
@@ -42,7 +44,7 @@ const Solicitation = sequelize.define('Solicitation', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Currencies',
+            model: Currencies,  // Usar el modelo importado
             key: 'cur_id'
         }
     },
@@ -50,17 +52,19 @@ const Solicitation = sequelize.define('Solicitation', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Type_solicitation',
+            model: Type_Solicitation,  // Usar el modelo importado
             key: 'typ_sol_id'
         }
     },
-
 }, {
-    tableName: 'solicitations', // Especifica el nombre de la tabla si no sigue la convención de pluralización
-    timestamps: false   // Desactiva los timestamps si la tabla no tiene createdAt y updatedAt
+    tableName: 'solicitations',
+    timestamps: false
 });
 
+// Definir asociaciones
 Solicitation.belongsTo(Person, { foreignKey: 'per_id' });
 Solicitation.belongsTo(Suppliers, { foreignKey: 'sup_id' });
+Solicitation.belongsTo(Type_Solicitation, { foreignKey: 'typ_sol_id' });
+Solicitation.belongsTo(Currencies, { foreignKey: 'cur_id' });
 
 module.exports = Solicitation;

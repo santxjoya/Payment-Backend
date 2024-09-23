@@ -1,5 +1,7 @@
 const Rol = require('../models/Rol');
 const { body, validationResult } = require('express-validator');
+const Area = require('../models/Area');
+
 
 const createRol = [
     body('rol_name').trim().notEmpty().withMessage('El nombre es requerido.')
@@ -23,7 +25,14 @@ const createRol = [
 
 const getAllRoles = async (req, res) => {
     try {
-        const roles = await Rol.findAll();
+        const roles = await Rol.findAll({
+            include: [
+                {
+                    model: Area, 
+                    attributes: ['are_id', 'are_name']
+                } 
+            ] 
+        });
         res.status(200).json(roles);
     } catch (error) {
         res.status(500).json({ error: error.message });

@@ -1,6 +1,7 @@
 const Solicitation = require('../models/Solicitation');
 const Person = require('../models/Person');
 const Suppliers = require('../models/Suppliers');
+const Type_Solicitation = require('../models/Type_solicitation');
 const { body, validationResult } = require('express-validator');
 
 
@@ -54,6 +55,10 @@ const getAllSolicitations = async (req, res) => {
                 {
                     model: Suppliers, // Relación con Supplier (Proveedores)
                     attributes: ['sup_id', 'sup_name']
+                },
+                {
+                    model: Type_Solicitation, 
+                    attributes: ['typ_sol_id', 'typ_sol_name']
                 }
             ] 
         });
