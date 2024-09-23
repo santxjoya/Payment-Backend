@@ -6,6 +6,8 @@ const createArea = [
     body('are_name').trim().notEmpty().withMessage('El nombre es requerido.')
         .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
         .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
+    body('are_limit').trim().notEmpty().withMessage('El límite del presupuesto es requerido.')
+        .isFloat().withMessage('El límite debe ser un número decimal.'),
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -48,6 +50,8 @@ const updateArea = [
     body('are_name').trim().optional()
         .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
         .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
+    body('are_limit').trim().optional()
+        .isFloat().withMessage('El límite debe ser un número decimal.'),
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

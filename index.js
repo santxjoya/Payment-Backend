@@ -9,6 +9,8 @@ const CurrencieRouter = require ('./routes/currencies');
 const TypeSolicitationsRouter = require ('./routes/type_solicitations');
 const SolicitationsRouter = require ('./routes/solicitations');
 const AttachmentRouter = require('./routes/attachment');
+const NewsRouter = require('./routes/news');
+
 const { authenticateToken } = require('./controllers/AuthController');
 const cors = require('cors');
 const path = require('path');
@@ -37,8 +39,8 @@ app.use('/api',authenticateToken,SuppliersRouter);
 app.use('/api',authenticateToken,CurrencieRouter);
 app.use('/api',authenticateToken,TypeSolicitationsRouter);
 app.use('/api',authenticateToken,SolicitationsRouter);
-app.use('/api',authenticateToken,AttachmentRouter);  //authenticateToken
-
+app.use('/api',authenticateToken,AttachmentRouter);
+app.use('/api',authenticateToken,NewsRouter);
 
 
 const port = process.env.PORT;
