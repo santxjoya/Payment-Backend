@@ -2,6 +2,7 @@ const Solicitation = require('../models/Solicitation');
 const Person = require('../models/Person');
 const Suppliers = require('../models/Suppliers');
 const Type_Solicitation = require('../models/Type_solicitation');
+const Currencies = require('../models/Currencies');
 const { body, validationResult } = require('express-validator');
 
 
@@ -59,7 +60,12 @@ const getAllSolicitations = async (req, res) => {
                 {
                     model: Type_Solicitation, 
                     attributes: ['typ_sol_id', 'typ_sol_name']
+                },
+                {
+                    model: Currencies, 
+                    attributes: ['cur_id', 'cur_name']
                 }
+
             ] 
         });
         res.status(200).json(solicitations);
