@@ -2,7 +2,7 @@ const Person = require('../models/Person');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const  emailjs = require('emailjs-com');
+const nodemailer = require('nodemailer');
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET || 'Clave'; // Usa la clave de entorno o un valor por defecto para token
 
 // Función para generar el token JWT
@@ -128,34 +128,110 @@ exports.authenticateToken = (req, res, next) => {
     next();
   });
 };
-// Códigos de recuperación de contraseña
 let recoveryCodes = {};
 const CODE_EXPIRATION_TIME = 60 * 60 * 1000; 
-// Generar código de recuperación
+let transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,  
+    pass: process.env.EMAIL_PASS  
+  }
+});
 function generarCodigo() {
   return crypto.randomBytes(3).toString('hex');
 }
 
-// Enviar correo con código de recuperación usando EmailJS
 async function enviarCorreo(correo, codigo) {
-  const templateParams = {
-    to_email: correo,
-    recovery_code: codigo,
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: correo,
+    subject: 'Recuperación de Contraseña',
+    html: `
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+          }
+          .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          }
+          .header {
+            background-color: #4CAF50;
+            padding: 10px;
+            text-align: center;
+            color: #ffffff;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+          }
+          .header h1 {
+            margin: 0;
+            font-size: 24px;
+          }
+          .content {
+            padding: 20px;
+            text-align: center;
+          }
+          .content p {
+            font-size: 18px;
+            margin-bottom: 20px;
+          }
+          .code {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+            padding: 10px;
+            border: 1px dashed #4CAF50;
+            display: inline-block;
+            margin-bottom: 20px;
+          }
+          .footer {
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            padding: 10px;
+          }
+        </style>
+      </head>
+      <body>
+
+        <div class="email-container">
+          <div class="header">
+            <h1>Recuperación de Contraseña</h1>
+          </div>
+          <div class="content">
+            <p>Hola,</p>
+            <p>Has solicitado recuperar tu contraseña. Usa el siguiente código para restablecerla:</p>
+            <div class="code">${codigo}</div> <!-- Aquí se inserta el código dinámicamente -->
+          </div>
+          <div class="footer">
+          </div>
+        </div>
+
+      </body>
+      </html>
+    `
   };
+
   try {
-    await emailjs.send(
-      process.env.EMAILJS_SERVICE_ID,
-      process.env.EMAILJS_TEMPLATE_ID,
-      templateParams,
-      process.env.EMAILJS_USER_ID
-    );
+    await transporter.sendMail(mailOptions);
     console.log('Correo enviado');
   } catch (error) {
     console.error('Error enviando correo:', error);
   }
 }
-
-// Solicitar recuperación de contraseña
 exports.postForgotPassword = async (req, res) => {
   const { per_mail } = req.body;
 
