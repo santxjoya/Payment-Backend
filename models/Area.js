@@ -11,6 +11,10 @@ const Area = sequelize.define('Area', {
     are_name: {
         type: DataTypes.STRING(255),
         allowNull: false,
+    },
+    are_limit: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
     }
 }, {
     tableName: 'areas', // Especifica el nombre de la tabla si no sigue la convención de pluralización
