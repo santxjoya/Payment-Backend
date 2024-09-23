@@ -46,5 +46,4 @@ const Person = sequelize.define('Person', {
 
 Person.belongsTo(Rol, { foreignKey: 'rol_id' });
 
-
 module.exports = Person;
