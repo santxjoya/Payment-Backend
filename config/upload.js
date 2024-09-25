@@ -1,32 +1,33 @@
 const multer = require('multer');
 const path = require('path');
 
-// Configuración de Multer para guardar archivos en la carpeta 'uploads'
+// Configuración del almacenamiento
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/');  // Directorio donde se guardarán los archivos
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); // Asegúrate de que la carpeta 'uploads/' existe
     },
-    filename: function (req, file, cb) {
+    filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname)); // Nombre único para el archivo
+        cb(null, uniqueSuffix + path.extname(file.originalname)); // Nombre único del archivo
     }
 });
 
-// Filtrar tipos de archivos aceptados
+// Filtro de archivos (opcional)
 const fileFilter = (req, file, cb) => {
-    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+    // Aceptar solo ciertos tipos de archivo
+    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
     if (allowedTypes.includes(file.mimetype)) {
-        cb(null, true);
+        cb(null, true); // Aceptar el archivo
     } else {
-        cb(new Error('Invalid file type. Only PDF, JPEG, and PNG are allowed.'), false);
+        cb(new Error('Tipo de archivo no permitido'), false); // Rechazar el archivo
     }
 };
 
-// Configuración del cargue de archivos
+// Configuración de Multer
 const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
-    limits: { fileSize: 1024 * 1024 * 5 } // Limitar el tamaño a 5MB
+    limits: { fileSize: 1024 * 1024 * 5 } // Limitar a 5 MB
 });
 
 module.exports = upload;
