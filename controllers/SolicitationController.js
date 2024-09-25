@@ -51,7 +51,7 @@ const getAllSolicitations = async (req, res) => {
             include: [
                 {
                     model: Person, // Relación con Person (Personas)
-                    attributes: ['per_id', 'per_name']
+                    attributes: ['per_id', 'per_name', 'per_lastname']
                 },
                 {
                     model: Suppliers, // Relación con Supplier (Proveedores)

@@ -8,7 +8,7 @@ const {
 } = require('../controllers/PersonController');
 const router = express.Router();
 
-router.post('/persons', createPerson);
+router.post('/persons', createPerson); 
 router.get('/persons', getAllPersons);
 router.get('/persons/:id', getPersonById);
 router.put('/persons/:id', updatePerson);
