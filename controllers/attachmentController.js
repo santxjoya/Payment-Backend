@@ -1,28 +1,50 @@
 const Attachment = require('../models/Attachment');
-const upload = require('../config/upload'); // Importa la configuración de multer desde upload.js
+const upload = require('../config/upload');
 
+// Función para manejar la subida de archivos adjuntos
 exports.uploadAttachment = (req, res) => {
     upload.single('file')(req, res, async (err) => {
-        if (err) return res.status(500).json({ error: err.message });
+        // Manejo de errores de Multer
+        if (err) {
+            return res.status(500).json({ error: `Error al cargar el archivo: ${err.message}` });
+        }
 
-        // Datos del archivo
+        // Verificación de archivo cargado
+        if (!req.file) {
+            return res.status(400).json({ error: 'No se ha recibido ningún archivo.' });
+        }
+
         const { originalname, filename } = req.file;
         const fileUrl = `/uploads/${filename}`;
-        const { sol_id } = req.body; // Asegúrate de que el ID de la solicitud venga en el body
+        const { sol_id } = req.body;
+
+        // Validación de sol_id
+        if (!sol_id) {
+            return res.status(400).json({ error: 'El ID de la solicitud (sol_id) es obligatorio.' });
+        }
 
         try {
-            // Crea un nuevo registro en la base de datos
+            // Crear el adjunto en la base de datos
             const attachment = await Attachment.create({
                 att_name: originalname,
                 att_url: fileUrl,
                 sol_id: sol_id
             });
 
-            // Respuesta exitosa
-            res.status(200).json({ message: 'File uploaded successfully', attachment });
+            // Respuesta exitosa con detalles del archivo
+            res.status(201).json({
+                message: 'Archivo subido exitosamente.',
+                attachment: {
+                    id: attachment.id,
+                    name: attachment.att_name,
+                    url: attachment.att_url,
+                    createdAt: attachment.createdAt
+                }
+            });
+
         } catch (error) {
-            // Manejo de errores
-            res.status(500).json({ error: error.message });
+            console.error('Error al guardar el adjunto:', error);
+            res.status(500).json({ error: 'Error al procesar el archivo. Intente de nuevo más tarde.' });
         }
     });
 };
