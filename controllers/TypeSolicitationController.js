@@ -32,7 +32,7 @@ const getAllTypeSolicitations = async (req, res) => {
 const getTypeSolicitationById = async (req, res) => {
     try {
         const type_Solicitation = await Type_Solicitation.findByPk(req.params.id);
-        if (!Type_Solicitation) {
+        if (!type_Solicitation) {
             return res.status(404).json({ message: 'Tipo de solicitud no encontrado' });
         }
         res.status(200).json(type_Solicitation);
