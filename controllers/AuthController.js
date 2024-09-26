@@ -129,7 +129,7 @@ exports.authenticateToken = (req, res, next) => {
   });
 };
 let recoveryCodes = {};
-const CODE_EXPIRATION_TIME = 60 * 60 * 1000; 
+const CODE_EXPIRATION_TIME = 60 * 60 * 1000;
 let transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -239,8 +239,8 @@ exports.postForgotPassword = async (req, res) => {
     const person = await Person.findOne({ where: { per_mail } });
     if (person) {
       const codigo = generarCodigo();
-      recoveryCodes[per_mail] = {
-        codigo: codigo,
+      recoveryCodes[codigo] = {
+        email: per_mail,
         timestamp: Date.now(),
       };
       await enviarCorreo(per_mail, codigo);
@@ -257,18 +257,15 @@ exports.postForgotPassword = async (req, res) => {
   }
 };
 
-// Verificación del código de recuperación
+// Verificación del código de recuperación (solo con el código)
 exports.postVerifyCode = async (req, res) => {
-  const { per_mail, recovery_code } = req.body;
+  const { recovery_code } = req.body;
 
   try {
-    const recoveryData = recoveryCodes[per_mail];
+    const recoveryData = recoveryCodes[recovery_code];
+    
     if (!recoveryData || Date.now() - recoveryData.timestamp > CODE_EXPIRATION_TIME) {
       return res.status(400).send('Código de recuperación inválido o expirado');
-    }
-
-    if (recoveryData.codigo !== recovery_code) {
-      return res.status(400).send('Código de recuperación incorrecto');
     }
 
     res.status(200).send('Código de verificación correcto. Puedes proceder a cambiar la contraseña.');
@@ -280,7 +277,7 @@ exports.postVerifyCode = async (req, res) => {
 
 // Restablecer contraseña
 exports.postResetPassword = async (req, res) => {
-  const { per_mail, new_password } = req.body;
+  const { recovery_code, new_password } = req.body;
 
   const errores = [];
 
@@ -293,21 +290,22 @@ exports.postResetPassword = async (req, res) => {
   }
 
   try {
-    const person = await Person.findOne({ where: { per_mail } });
-    if (!person) {
-      return res.status(404).send('Correo no registrado');
-    }
-
-    const recoveryData = recoveryCodes[per_mail];
+    const recoveryData = recoveryCodes[recovery_code];
+    
     if (!recoveryData) {
       return res.status(400).send('Código de recuperación no ha sido verificado');
+    }
+
+    const person = await Person.findOne({ where: { per_mail: recoveryData.email } });
+    if (!person) {
+      return res.status(404).send('Correo no registrado');
     }
 
     const ProteccionPassword = await bcrypt.hash(new_password, 10);
     person.per_password = ProteccionPassword;
     await person.save();
 
-    delete recoveryCodes[per_mail]; // Eliminar el código de recuperación después de ser usado
+    delete recoveryCodes[recovery_code]; // Eliminar el código de recuperación después de ser usado
     res.status(200).send('Contraseña restablecida correctamente');
   } catch (error) {
     console.log(error);
