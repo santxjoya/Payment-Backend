@@ -48,7 +48,7 @@ const createSolicitation = [
 const getAllSolicitations = async (req, res) => {
     try {
         const solicitations = await Solicitation.findAll({
-            include: [
+            include: [ 
                 {
                     model: Person, // Relación con Person (Personas)
                     attributes: ['per_id', 'per_name', 'per_lastname']
