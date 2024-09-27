@@ -3,21 +3,22 @@ const { body, validationResult } = require('express-validator');
 
 const createSupplier = [
     body('sup_name').trim().notEmpty().withMessage('El nombre es requerido.')
-    .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
-    .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
+        .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
+        .matches(/^[a-zA-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras.'),
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             const allErrors = errors.array().map(error => error.msg);
             return res.status(400).json({ errors: allErrors });
         }
-    try {
-        const supplier = await Suppliers.create(req.body);
-        res.status(201).json(supplier);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
+        try {
+            const supplier = await Suppliers.create(req.body);
+            res.status(201).json(supplier);
+        } catch (error) {
+            res.status(400).json({ error: error.message });
+        }
     }
-}];
+];
 
 const getSuppliers = async (req, res) => {
     try {
@@ -42,25 +43,26 @@ const getSupplierById = async (req, res) => {
 
 const updateSupplier = [
     body('sup_name').trim().optional()
-    .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
-    .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
+        .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
+        .matches(/^[a-zA-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras.'),
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             const allErrors = errors.array().map(error => error.msg);
             return res.status(400).json({ errors: allErrors });
         }
-    try {
-        const supplier = await Suppliers.findByPk(req.params.id);
-        if (!supplier) {
-            return res.status(404).json({ message: 'Proveedor no encontrado' });
+        try {
+            const supplier = await Suppliers.findByPk(req.params.id);
+            if (!supplier) {
+                return res.status(404).json({ message: 'Proveedor no encontrado' });
+            }
+            await supplier.update(req.body);
+            res.status(200).json(supplier);
+        } catch (error) {
+            res.status(400).json({ error: error.message });
         }
-        await supplier.update(req.body);
-        res.status(200).json(supplier);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
     }
-}];
+];
 
 const deleteSupplier = async (req, res) => {
     try {

@@ -5,7 +5,6 @@ const Type_Solicitation = require('../models/Type_solicitation');
 const Currencies = require('../models/Currencies');
 const { body, validationResult } = require('express-validator');
 
-
 const createSolicitation = [
     body('sol_cost')
         .trim()
@@ -15,7 +14,7 @@ const createSolicitation = [
         .trim()
         .notEmpty().withMessage('La descripción es requerida.')
         .isLength({ min: 5, max: 255 }).withMessage('La descripción debe tener entre 5 y 255 caracteres.')
-        .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('La descripción solo puede contener letras en mayúsculas.'),
+        .matches(/^[a-zA-ZÁÉÍÓÚÑ\s]+$/).withMessage('La descripción solo puede contener letras.'),
     body('per_id')
         .notEmpty().withMessage('La persona es requerida.'),
     body('sup_id')
@@ -44,17 +43,16 @@ const createSolicitation = [
     }
 ];
 
-
 const getAllSolicitations = async (req, res) => {
     try {
         const solicitations = await Solicitation.findAll({
             include: [ 
                 {
-                    model: Person, // Relación con Person (Personas)
+                    model: Person,
                     attributes: ['per_id', 'per_name', 'per_lastname']
                 },
                 {
-                    model: Suppliers, // Relación con Supplier (Proveedores)
+                    model: Suppliers,
                     attributes: ['sup_id', 'sup_name']
                 },
                 {
@@ -65,7 +63,6 @@ const getAllSolicitations = async (req, res) => {
                     model: Currencies, 
                     attributes: ['cur_id', 'cur_name']
                 }
-
             ] 
         });
         res.status(200).json(solicitations);
@@ -96,7 +93,7 @@ const updateSolicitation = [
     body('sol_description')
         .optional()
         .isLength({ min: 5, max: 255 }).withMessage('La descripción debe tener entre 5 y 255 caracteres.')
-        .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('La descripción solo puede contener letras en mayúsculas.'),
+        .matches(/^[a-zA-ZÁÉÍÓÚÑ\s]+$/).withMessage('La descripción solo puede contener letras.'),
     body('per_id')
         .optional()
         .notEmpty().withMessage('La persona es requerida.'),

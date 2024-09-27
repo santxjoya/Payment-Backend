@@ -8,7 +8,7 @@ const getAllNews = async (req, res) => {
             include: [
                 {
                     model: Person,
-                    attributes: ['per_id', 'per_name']
+                    attributes: ['per_id', 'per_name', 'per_lastname']
                 },
                 {
                     model: Solicitation,

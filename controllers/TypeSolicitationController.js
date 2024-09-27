@@ -3,9 +3,9 @@ const { body, validationResult } = require('express-validator');
 
 const createTypeSolicitation = [
     body('typ_sol_name').trim()
-    .notEmpty().withMessage('El nombre es requerido.')
-    .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
-    .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
+        .notEmpty().withMessage('El nombre es requerido.')
+        .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
+        .matches(/^[a-zA-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras.'),
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -20,6 +20,7 @@ const createTypeSolicitation = [
         }
     }
 ];
+
 const getAllTypeSolicitations = async (req, res) => {
     try {
         const type_Solicitations = await Type_Solicitation.findAll();
@@ -32,7 +33,7 @@ const getAllTypeSolicitations = async (req, res) => {
 const getTypeSolicitationById = async (req, res) => {
     try {
         const type_Solicitation = await Type_Solicitation.findByPk(req.params.id);
-        if (!Type_Solicitation) {
+        if (!type_Solicitation) {
             return res.status(404).json({ message: 'Tipo de solicitud no encontrado' });
         }
         res.status(200).json(type_Solicitation);
@@ -44,7 +45,7 @@ const getTypeSolicitationById = async (req, res) => {
 const updateTypeSolicitation = [
     body('typ_sol_name').trim().optional()
         .isLength({ min: 4, max: 255 }).withMessage('El nombre debe tener entre 4 y 255 caracteres.')
-        .matches(/^[A-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras en mayúsculas.'),
+        .matches(/^[a-zA-ZÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras.'),
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -63,7 +64,6 @@ const updateTypeSolicitation = [
         }
     }
 ];
-
 
 const deleteTypeSolicitation = async (req, res) => {
     try {
