@@ -5,6 +5,7 @@ Payment-Backend es una API REST diseñada para gestionar el inventario de una em
 ## Características principales 📌📌
 
 - **API RESTful**: Interfaz de programación de aplicaciones basada en principios REST.
+- **Express**: Framework para construir la API REST de manera rápida y sencilla.
 - **Gestión de inventarios**: Facilita la gestión y consulta del inventario de productos.
 - **Solicitudes de inventario**: Permite realizar solicitudes sujetas a presupuestos y áreas solicitantes.
 - **Sistema de autenticación**: Seguridad basada en correo electrónico para el inicio de sesión y autenticación de usuarios.
