@@ -19,6 +19,6 @@ Payment-Backend es una API REST diseñada para gestionar el inventario de una em
 
 ## Requisitos 🔧⚙️
 
-- Node.js vX.X.X o superior
-- MongoDB (si se usa como base de datos)
+- Node.js
+- MongoDB
 - Dependencias listadas en el archivo `package.json`
